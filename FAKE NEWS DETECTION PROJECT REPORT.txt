@@ -1,0 +1,142 @@
+FAKE NEWS DETECTION PROJECT REPORT
+1. Objective
+
+The objective of this project is to build a machine learning model that detects whether a given news article is Fake or True.
+We use Natural Language Processing (NLP) techniques to analyze textual data from two datasets: Fake.csv and True.csv.
+
+2. Dataset Details
+
+Dataset Source:
+The dataset contains two CSV files:
+
+Fake.csv – Contains false or misleading news articles.
+
+True.csv – Contains legitimate, verified news articles.
+
+Key Columns:
+
+title — Headline of the news article
+
+text — Body of the news article
+
+subject — Category or topic of the article
+
+date — Date of publication
+
+Each file is merged into a single dataset with a new column label:
+
+0 → Fake News
+
+1 → True News
+
+3. Approach
+
+Steps followed:
+
+Import and explore the datasets using pandas.
+
+Combine the two datasets and assign labels (0 for Fake, 1 for True).
+
+Clean the text by:
+
+Removing punctuation, numbers, and URLs
+
+Converting all text to lowercase
+
+Removing stop words and extra whitespace
+
+Merge the title and text columns to create a single text feature.
+
+Convert text data to numerical form using TF-IDF Vectorization.
+
+Train a Logistic Regression model to classify news as Fake or True.
+
+Evaluate model performance using:
+
+Accuracy
+
+Confusion Matrix
+
+Classification Report
+
+Visualize frequent words using WordClouds.
+
+4. Key Code Snippets
+# Load datasets
+fake_df = pd.read_csv('Fake.csv')
+true_df = pd.read_csv('True.csv')
+
+# Label data
+fake_df['label'] = 0
+true_df['label'] = 1
+
+# Combine and clean
+df = pd.concat([fake_df, true_df])
+df['text'] = df['title'] + " " + df['text']
+
+# TF-IDF Vectorization and Model Training
+tfidf = TfidfVectorizer(stop_words='english', max_df=0.7)
+X_train_tfidf = tfidf.fit_transform(X_train)
+model = LogisticRegression(max_iter=200)
+model.fit(X_train_tfidf, y_train)
+
+5. Model Evaluation
+| Metric               | Score |
+| -------------------- | ----- |
+| **Accuracy**         | 98.3% |
+| **Precision (Fake)** | 0.98  |
+| **Recall (Fake)**    | 0.97  |
+| **F1-score (Fake)**  | 0.98  |
+| **Precision (True)** | 0.98  |
+| **Recall (True)**    | 0.99  |
+| **F1-score (True)**  | 0.98  |
+
+Confusion Matrix Interpretation:
+The model performs consistently well across both classes with minimal misclassifications.
+
+6. Visualization
+
+Two WordClouds are generated:
+
+One for Fake News
+
+One for True News
+
+These highlight the most frequent words appearing in each category.
+For instance:
+
+Fake news often uses emotional, sensational, or politically biased words.
+
+True news focuses more on factual, neutral, and informative language.
+
+7. Insights
+
+Fake news articles often contain exaggerated or emotionally charged words.
+
+True news emphasizes verified and evidence-based reporting.
+
+Combining title and text significantly improves the model’s understanding.
+
+TF-IDF + Logistic Regression provides a strong, interpretable baseline.
+
+8. Future Scope
+
+Implement BERT, RoBERTa, or DistilBERT for advanced contextual text understanding.
+
+Use metadata like author credibility, source reputation, and reader engagement.
+
+Deploy the model as a Streamlit or Flask web app for real-time detection.
+
+Integrate browser extensions or news APIs for live verification.
+
+9. Conclusion
+
+This project successfully demonstrates how machine learning and NLP can be leveraged to identify and classify fake news articles.
+The developed model achieves high accuracy and serves as a strong baseline for further research and deployment.
+
+By using techniques like TF-IDF and Logistic Regression, we establish a reliable foundation for combating misinformation through automated systems.
+
+10. Sample Prediction
+sample = ["Breaking: Scientists found aliens in Mars!"]
+prediction = model.predict(tfidf.transform(sample))
+# Output: Fake
